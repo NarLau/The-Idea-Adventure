@@ -18,7 +18,7 @@ export const auth = betterAuth({
         };
       },} 
     }, 
-    ession: {
+    session: {
       expiresIn: 60 * 60
     }  
   }
