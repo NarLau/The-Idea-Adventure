@@ -16,7 +16,10 @@ export const auth = betterAuth({
           accessToken: "new-access-token",
           refreshToken: "new-refresh-token",
         };
-      },
-        } 
+      },} 
     }, 
-});
+    ession: {
+      expiresIn: 60 * 60
+    }  
+  }
+);
