@@ -186,6 +186,12 @@ nav .logo {
 nav  a .logo{
   opacity: 1;
 }
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
 
 /* ----------------- Responsive Nav ----------------- */
 @media (max-width: 768px) {
@@ -198,16 +204,64 @@ nav  a .logo{
     width: 100%;
     display: none;
   }
+  .hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #000;
+    transition: 0.3s;
+  }
 
-  nav ul.show {
+  .hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+  .hamburger {
     display: flex;
   }
+  .nav-menu.show {
+    display: flex;
+    gap: 1em;
+  }
+  nav ul a.active{
+     border-bottom: none; 
+    background-color:var(--accent);
+     width: 100%;
+      color: white;
+  }
+  .nav-menu.show li{
+    display:flex;
+  }
+  .nav-menu.show li a{
+    opacity: 1;
+  }
+  .nav-menu li:last-child {
+    display: flex;
+    justify-content: center;
+    background-color: var(--secondary);
+    border-radius: 4px;
+    padding: 2px;
+    transition: transform 0.2s ease;
+  }
 
-  nav .menu-toggle {
-    display: block;
-    cursor: pointer;
+  li:last-child:hover {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  li:last-child a {
+     opacity: 1;
+     border: none;
+     color: rgb(0, 0, 0);
   }
 }
+/* ----------------- spinner----------------- */
 .spinner-overlay {
   position: fixed;
   inset: 0;
@@ -249,7 +303,8 @@ p {
 
 /* ----------------- Buttons ----------------- */
 button {
-  color: var(--text);
+  color: var(--text2);
+  background-color: var(--primary-dark);
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   border: 2px solid transparent;
