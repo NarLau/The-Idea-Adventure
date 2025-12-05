@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -42,12 +43,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
-
 export default function App() {
- return (
+  const navigation = useNavigation();
+  const spinnerRoutes = ["/", "/project-info"];
+  const to = navigation.location?.pathname ?? "";
+
+  console.log("nav state:", navigation.state, "| to:", to);
+
+  const shouldShowSpinner =
+    navigation.state === "loading" &&
+    spinnerRoutes.some((route) => to.startsWith(route));
+
+  return (
     <>
-      <Nav />
-      <Outlet />
+      
+      {shouldShowSpinner && (
+        <div className="spinner-overlay">
+          <div className="spinner-circle"></div>
+        </div>
+      )}
+
+      <main>
+        <Outlet />
+      </main>
+
       <Footer />
     </>
   );

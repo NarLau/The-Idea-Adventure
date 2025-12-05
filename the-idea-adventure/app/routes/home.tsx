@@ -1,7 +1,8 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 import Hero from "../components/hero.tsx";
 import SignIn from "./signIn.tsx";
+import { HomePageContent } from "~/content/HomePageContent.tsx";
+import Nav from "~/components/nav.tsx";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -13,9 +14,9 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (<>
+  <Nav />
     <Hero/>
-  <Welcome />
-  <SignIn/>
+  <HomePageContent/>
   </>
 );
 }

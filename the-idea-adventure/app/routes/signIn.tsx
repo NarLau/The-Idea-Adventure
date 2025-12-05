@@ -1,5 +1,5 @@
 import { authClient } from "~/servers/auth/client";
-import { Button } from "~/components/ui/buttons";
+
 
 export default function AuthButton() {
   const {
@@ -10,35 +10,37 @@ export default function AuthButton() {
   } = authClient.useSession();
 
   if (isPending) {
-    return <Button className="w-full">Laddar...</Button>;
+    return <button className="loginLogout btn-hero">Laddar...</button>;
   }
 
   if (!session) {
-    return (
-      <Button
-        className="w-full"
+    return (<>
+      <button
+        className="loginLogout btn-hero discordBtn hovernbigger"
         onClick={() =>
           authClient.signIn.social({
             provider: "discord",
-            callbackURL: "/",
+            callbackURL: location.pathname, 
           })
         }
       >
-        Logga in med Discord
-      </Button>
+        Login with Discord
+      </button>
+      <p className="orelse"> or</p>
+      <button  className="loginLogout btn-hero robloxBtn hovernbigger">Login with Roblox</button></>
     );
   }
 
   return (
-    <Button
-      className="w-full"
+    <p
+      className="logoutP hovernbigger"
       onClick={() =>
         authClient.signOut({
           query: { redirectTo: "/" },
         })
       }
     >
-      Logga ut
-    </Button>
+      LogOut
+    </p>
   );
 }

@@ -8,7 +8,7 @@ const Nav: React.FC = () => {
 
   return (
     <nav className="nav-container">
-      <h2 className="logo">LOGO</h2>
+      <NavLink to="/" ><h2 className="logo">LOGO</h2></NavLink>
 
       <ul className="nav-menu">
         <li>
@@ -17,13 +17,13 @@ const Nav: React.FC = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/about" className={getActiveClass}>
-            About
+          <NavLink to="/project-info" className={getActiveClass}>
+            Info
           </NavLink>
         </li>
         <li>
-          <NavLink to="/contact" className={getActiveClass}>
-            Contact
+          <NavLink to="/navplaygame" className={getActiveClass}>
+            Play Game
           </NavLink>
         </li>
       </ul>

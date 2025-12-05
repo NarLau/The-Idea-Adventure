@@ -2,5 +2,7 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
 export default [
     index("routes/home.tsx"),
-  route('api/auth/*', 'routes/auth.ts')
+  route('api/auth/*', 'routes/auth.ts'),
+  route('/project-info', 'routes/projectInformation.tsx'),
+  route('/navplaygame', 'routes/navplaygame.tsx')
 ] satisfies RouteConfig;
