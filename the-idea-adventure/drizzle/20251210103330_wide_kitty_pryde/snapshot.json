@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "8ec6d029-d084-4a68-9d94-d50520c1b4cd",
+  "id": "075549c3-65de-4511-aa27-fbccef35fdf5",
   "prevIds": [
-    "646382cb-ee97-4c6f-b8a7-b11994491e76"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
@@ -39,6 +39,12 @@
     {
       "isRlsEnabled": false,
       "name": "item",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "quest",
       "entityType": "tables",
       "schema": "public"
     },
@@ -365,7 +371,7 @@
       "table": "dialogNode"
     },
     {
-      "type": "serial",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -378,7 +384,7 @@
       "table": "interactableObject"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
@@ -430,7 +436,7 @@
       "table": "interactableObject"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
@@ -443,7 +449,7 @@
       "table": "interactableObject"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
@@ -451,6 +457,19 @@
       "generated": null,
       "identity": null,
       "name": "reward_item_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "interactableObject"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "isOneTimeUse",
       "entityType": "columns",
       "schema": "public",
       "table": "interactableObject"
@@ -575,6 +594,136 @@
     {
       "type": "text",
       "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "description",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "item_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "scene_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "required_flag",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "reward_item_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "reward_money",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "reward_flag",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "order",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
       "default": null,
@@ -586,9 +735,9 @@
       "table": "questProgress"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
@@ -625,9 +774,9 @@
       "table": "questProgress"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
@@ -677,7 +826,7 @@
       "table": "rewardMoney"
     },
     {
-      "type": "serial",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -1068,6 +1217,40 @@
     {
       "nameExplicit": false,
       "columns": [
+        "required_item_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "item",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "interactableObject_required_item_id_item_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "interactableObject"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "reward_item_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "item",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "interactableObject_reward_item_id_item_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "interactableObject"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
         "item_id"
       ],
       "schemaTo": "public",
@@ -1102,6 +1285,57 @@
     {
       "nameExplicit": false,
       "columns": [
+        "item_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "item",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "quest_item_id_item_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "scene_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "scene",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "quest_scene_id_scene_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "reward_item_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "item",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "quest_reward_item_id_item_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "quest"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
         "user_id"
       ],
       "schemaTo": "public",
@@ -1115,6 +1349,40 @@
       "entityType": "fks",
       "schema": "public",
       "table": "questProgress"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "quest_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "quest",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "questProgress_quest_id_quest_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "questProgress"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "quest_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "quest",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "rewardMoney_quest_id_quest_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "rewardMoney"
     },
     {
       "nameExplicit": false,
@@ -1181,6 +1449,16 @@
       "name": "item_pkey",
       "schema": "public",
       "table": "item",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "quest_pkey",
+      "schema": "public",
+      "table": "quest",
       "entityType": "pks"
     },
     {

@@ -10,7 +10,7 @@ export default function AuthButton() {
   } = authClient.useSession();
 
   if (isPending) {
-    return <button className="loginLogout btn-hero">Laddar...</button>;
+    return <button className="loginLogout btn-hero">Loading...</button>;
   }
 
   if (!session) {

@@ -86,20 +86,21 @@ export const inventoryItem = pgTable("inventory_item", {
 
 
 export const scene = pgTable("scene", {
-  id: serial().primaryKey(),
+  id: text().primaryKey(),
   name: text("name").notNull(),
   background: text("background"), 
 });
 
 
 export const interactableObject = pgTable("interactableObject", {
-  id: serial().primaryKey(),
-  sceneId: integer().references(() => scene.id),
+  id: text().primaryKey(),
+  sceneId: text().references(() => scene.id),
   name: text("name").notNull(),
   description: text("description"),
   onClickAction: text("onClickAction"),
-  requiredItemId: integer(),
-  rewardItemId: integer(),
+  requiredItemId: text().references(() => item.id),
+  rewardItemId: text().references(() => item.id),
+  isOneTimeUse: boolean("isOneTimeUse"),
 });
 
 
@@ -117,16 +118,28 @@ export const dialogNode = pgTable("dialogNode", {
   condition: text("condition"),
   onSelectFlag: text("onSelectFlag"),
 });
+export const quest = pgTable("quest", {
+  id: text().primaryKey(),
+  name: text().notNull(),
+  description: text().notNull(),
+  itemId:  text().references(() => item.id),
+  sceneId: text().references(() => scene.id),
+  requiredFlag: text(), 
+  rewardItemId: text().references(() => item.id),
+  rewardMoney: integer().default(0),
+  rewardFlag: text(), 
+  order: integer().default(0),
+});
 
 export const rewardMoney = pgTable("rewardMoney", {
-  questId: integer().notNull(),
+  questId: text().references(() => quest.id),
   name: text("name").notNull(),
   rewardMoney: integer("rewardMoney").notNull(),
   rewardImage: text("rewardImage"),
 });
 export const questProgress = pgTable("questProgress", {
   userId: text().references(() => user.id),
-  questId: integer().notNull(),
+  questId: text().references(() => quest.id),
   progress: integer("progress").notNull().default(0),
   completed: boolean("completed").notNull().default(false),
 });

@@ -419,6 +419,31 @@ section{
   flex-flow: column wrap;
   align-items: center;
 }
+
+/* ----------------- GameCSS ----------------- */
+.playerHome{
+  background-color: #889087;
+}
+.playerForest{
+  background-color: forestgreen;
+}
+.playerTown{
+  background-color: gray;
+}
+.playerShop{
+  background-color: salmon;
+}
+.gameLogOut{
+  cursor: pointer;
+    padding: 0.5rem 1rem;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s;
+  
+}
 @media (width <=600px){
   .heroContainer .heroContent.heroText{
     display:none;
