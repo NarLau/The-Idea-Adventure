@@ -7,20 +7,33 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
+  user: {
+    additionalFields: {
+      money: {
+        type: "number",
+        required: false,
+        defaultValue: 0,
+      },
+      flags: {
+        type: "string",
+        required: false,
+        defaultValue: {},
+      },
+    },
+  },
   socialProviders: { 
-        discord: { 
-            clientId: process.env.DISCORD_CLIENT_ID!, 
-            clientSecret: process.env.DISCORD_CLIENT_SECRET!, 
-            refreshAccessToken: async (token) => {
+    discord: { 
+      clientId: process.env.DISCORD_CLIENT_ID!, 
+      clientSecret: process.env.DISCORD_CLIENT_SECRET!, 
+      refreshAccessToken: async (token) => {
         return {
           accessToken: "new-access-token",
           refreshToken: "new-refresh-token",
         };
-      },} 
-    }, 
-    session: {
-      expiresIn: 60 * 60
-    },
-     
-  }
-);
+      },
+    } 
+  }, 
+  session: {
+    expiresIn: 60 * 60
+  },
+});
