@@ -421,6 +421,39 @@ section{
 }
 
 /* ----------------- GameCSS ----------------- */
+.sceneGlobal {
+display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #333;
+}
+.player-move {
+  display: grid;
+}
+.sign-toggle{
+  display: grid;
+  grid-row: 8/10;
+  grid-column: 1;
+}
+.sign-panel {
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.door-toggle {
+display: grid;
+grid-row: 8/10;
+  grid-column: 9;
+}
+.door-panel {
+  display: none;
+  transition: all 0.3s ease;
+}
+
+
 .playerHome{
   background-color: #889087;
 }
@@ -444,6 +477,157 @@ section{
     transition: background-color 0.2s, transform 0.2s;
   
 }
+/* ----------------- Game Layout & UI ----------------- */
+.game-page-grid {
+  display: grid;
+  grid-template-rows: auto 1fr 80px;
+  grid-template-columns: 1fr;
+  height: 100vh;
+  width: 100vw;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  background-color: #444;
+  color: white;
+  height: 60px;
+  border-bottom: 2px solid #222;
+}
+
+/* Main Game Frame */
+.game-frame {
+  background-color: #cfcfcf;
+  overflow: hidden;
+  position: relative;
+}
+
+.bottom-hud {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between  ;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  background-color: #333;
+  border-top: 2px solid #222;
+}
+
+/* Inventory Panel */
+
+
+.inventory-panel h3 {
+  margin-top: 0;
+}
+
+.inventory-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.inventory-panel li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  padding: 4px 0;
+}
+
+.inventory-panel li:last-child {
+  border-bottom: none;
+}
+
+.empty {
+  font-style: italic;
+}
+
+.money {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* Inventory Toggle Button */
+.inventory-toggle {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  border: none;
+  background: #9a6a2f;
+  color: white;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+
+.inventory-toggle:hover {
+  transform: scale(1.05);
+}
+
+.inventory-panel, .sign-panel {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  width: 260px;
+  padding: 12px;
+  background: #f2f2f2;
+  border: 2px solid #444;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: none;
+}
+.settings-panel, .door-panel {
+  position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 260px;
+    padding: 12px;
+    background: #f2f2f2;
+    border: 2px solid #444;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: none;
+}
+
+.settings-panel.open, .sign-panel.open, .door-panel.open, .inventory-panel.open {
+display: block;
+}
+
+
+/* Settings Button */
+.settings-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  border: none;
+  background: #555;
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.settings-button:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .bottom-hud {
+    grid-template-columns: 1fr auto;
+    padding: 0 8px;
+  }
+
+  .inventory-panel {
+    width: 200px;
+  }
+}
+
 @media (width <=600px){
   .heroContainer .heroContent.heroText{
     display:none;
