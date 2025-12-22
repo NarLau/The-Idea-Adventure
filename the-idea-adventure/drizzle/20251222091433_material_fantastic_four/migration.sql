@@ -1,0 +1,1 @@
+ALTER TABLE "inventory_item" ADD PRIMARY KEY ("user_id","item_id");

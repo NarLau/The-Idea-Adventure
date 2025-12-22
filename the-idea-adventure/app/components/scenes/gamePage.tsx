@@ -10,6 +10,8 @@ import { NavLink } from "react-router";
 export default function GamePage() {
   const { scene } = useGame();
     const [settingsOpen, setSettingsOpen] = useState(false);
+    
+    
 
   return (
     <div className="game-page-grid">

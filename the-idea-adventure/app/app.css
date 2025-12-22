@@ -615,7 +615,39 @@ display: block;
 .settings-button:hover {
   transform: scale(1.05);
 }
+/* ----------------- Dog NPC ----------------- */
+.dog-npc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  transition: transform 0.2s ease;
+}
 
+.dog-npc:hover {
+  transform: scale(1.2);
+}
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.dialog-box {
+  background: #222;
+  color: white;
+  padding: 16px;
+  margin-bottom: 40px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  font-size: 16px;
+}
 /* Responsive */
 @media (max-width: 600px) {
   .bottom-hud {

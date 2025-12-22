@@ -1,0 +1,2 @@
+ALTER TABLE "interactableObject" ADD COLUMN "character_id" integer;--> statement-breakpoint
+ALTER TABLE "interactableObject" ADD CONSTRAINT "interactableObject_character_id_character_id_fkey" FOREIGN KEY ("character_id") REFERENCES "character"("id");

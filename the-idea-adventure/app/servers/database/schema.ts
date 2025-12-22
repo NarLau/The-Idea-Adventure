@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, integer, serial } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, serial, primaryKey } from "drizzle-orm/pg-core";
 import { jsonb } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -74,15 +74,21 @@ export const item = pgTable("item", {
 });
 
 
-export const inventoryItem = pgTable("inventory_item", {
-  itemId: text()
-    .notNull()
-    .references(() => item.id),
-  userId: text()
-    .notNull()
-    .references(() => user.id),
-  quantity: integer("quantity").notNull().default(1),
-});
+export const inventoryItem = pgTable(
+  "inventory_item",
+  {
+    itemId: text()
+      .notNull()
+      .references(() => item.id),
+    userId: text()
+      .notNull()
+      .references(() => user.id),
+    quantity: integer("quantity").notNull().default(1),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.userId, table.itemId] }),
+  })
+);
 
 
 export const scene = pgTable("scene", {
@@ -90,7 +96,11 @@ export const scene = pgTable("scene", {
   name: text("name").notNull(),
   background: text("background"), 
 });
-
+export const character = pgTable("character", {
+  id: serial().primaryKey(),
+  name: text("name").notNull(),
+  portrait: text("portrait"), // sprite
+});
 
 export const interactableObject = pgTable("interactableObject", {
   id: text().primaryKey(),
@@ -101,14 +111,11 @@ export const interactableObject = pgTable("interactableObject", {
   requiredItemId: text().references(() => item.id),
   rewardItemId: text().references(() => item.id),
   isOneTimeUse: boolean("isOneTimeUse"),
+  characterId: integer().references(() => character.id),
 });
 
 
-export const character = pgTable("character", {
-  id: serial().primaryKey(),
-  name: text("name").notNull(),
-  portrait: text("portrait"), // sprite
-});
+
 
 export const dialogNode = pgTable("dialogNode", {
   id: serial().primaryKey(),

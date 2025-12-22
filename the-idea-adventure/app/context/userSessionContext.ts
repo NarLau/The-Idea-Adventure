@@ -12,6 +12,18 @@ export type InventoryItemS = {
   item: GameItem; // full item data
   quantity: number;
 };
+export type DialogNode = {
+  id: number;
+  text: string;
+  nextNode?: number[];
+  condition?: string;      // ✅ add this
+  onSelectFlag?: string;
+};
+export type NPC = {
+  data: any; // interactableObject type, you can refine if you want
+  dialogNodes: DialogNode[];
+};
+
 export type UserSession = {
   session: {
     token: string;
@@ -26,6 +38,7 @@ export type UserSession = {
   };
   inventoryItem: { itemId: string; userId: string; quantity: number }[]; 
     inventory?: InventoryItemS[];
+     npcs?: { [key: string]: NPC }; // e.g., { dog: NPC }
 
 
 };

@@ -2,11 +2,13 @@ import { eq } from "drizzle-orm";
 import { redirect } from "react-router";
 import { auth } from "~/servers/auth";
 import { db } from "~/servers/database";
-import { user, inventoryItem, item } from "~/servers/database/schema";
+import { user, inventoryItem, item, interactableObject, dialogNode, character } from "~/servers/database/schema";
 
 export async function requireUserMiddleware({ request, context }: any) {
   const userSession = await auth.api.getSession(request);
-  if (!userSession?.user) throw redirect("/");
+  if (!userSession?.user) throw redirect("/navplaygame");
+  
+  
 
   const [dbUser] = await db
     .select()
@@ -28,9 +30,35 @@ export async function requireUserMiddleware({ request, context }: any) {
     };
   });
 
+  // --- Load dog NPC ---
+// fetch dog interactable
+const [dogData] = await db.select().from(interactableObject).where(eq(interactableObject.id, "11"));
+
+
+const dogDialogNodes = await db
+  .select({
+    id: dialogNode.id,
+    text: dialogNode.text,
+    nextNode: dialogNode.nextNode,
+    condition: dialogNode.condition,
+    onSelectFlag: dialogNode.onSelectFlag,
+  })
+  .from(dialogNode)
+  .where(eq(dialogNode.characterId, dogData.characterId!));
+
+
+  // --- User flags ---
+  const userFlags = Array.isArray(dbUser?.flags) ? dbUser.flags : [];
+
   context.userSession = {
     ...userSession,
-    user: { ...userSession.user, money: dbUser?.money ?? 0 },
+    user: { ...userSession.user, money: dbUser?.money ?? 0, flags: userFlags },
     inventory: fullInventory,
+   npcs: {
+    dog: {
+      data: { /* optional interactable info */ },
+      dialogNodes: await db.select().from(dialogNode).where(eq(dialogNode.characterId, 1)) // example dog character ID
+    },
+    },
   };
 }
