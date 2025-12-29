@@ -15,9 +15,9 @@ export const auth = betterAuth({
         defaultValue: 0,
       },
       flags: {
-        type: "string",
+        type: "string[]",
         required: false,
-        defaultValue: {},
+        defaultValue: [],
       },
     },
   },

@@ -13,7 +13,7 @@ export const user = pgTable("user", {
     .$onUpdate(() => /* @PURE */ new Date())
     .notNull(),
   money: integer(),
-  flags: jsonb("flags").notNull().default({}),
+  flags: jsonb("flags").notNull().default([]),
 
 });
 

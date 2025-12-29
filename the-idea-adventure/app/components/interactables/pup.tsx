@@ -1,63 +1,57 @@
-import  { useState } from "react";
+import { useState } from "react";
 import type { DialogNode } from "~/context/userSessionContext";
+import { useGame } from "~/routes/game/gameContent";
+import { evaluateDialogCondition } from "~/utils/dialogHelper";
 
 type DogProps = {
   dialogNodes: DialogNode[];
-  userFlags: string[];
-  updateFlags: (flag: string) => void;
-  position?: { left: number; top: number }; // optional
 };
 
-export default function Dog({
-  dialogNodes,
-  userFlags,
-  updateFlags,
-  position = { left: 200, top: 250 },
-}: DogProps) {
+export default function Dog({ dialogNodes }: DogProps) {
+  const { flags, addFlag, inventory, setInventory } = useGame();
+  const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentNode, setCurrentNode] = useState<DialogNode | null>(null);
 
-  const getNextNode = () => {
-    return dialogNodes.find((node) => {
-      if (!node.condition) return true;
-      if (node.condition.startsWith("!")) {
-        return !userFlags.includes(node.condition.slice(1));
-      }
-      return userFlags.includes(node.condition);
-    }) || null;
-  };
+
+  const getNextNode = () =>
+    dialogNodes.find((_, idx) =>
+      idx > dialogIndex &&
+      evaluateDialogCondition(dialogNodes[idx], flags, inventory, (itemId) => {
+       
+        setInventory((prev) =>
+          prev
+            .map((i) =>
+              i.item.id === itemId ? { ...i, quantity: i.quantity - 1 } : i
+            )
+            .filter((i) => i.quantity > 0)
+        );
+      })
+    ) || null;
 
   const handleClick = () => {
-    if (!currentNode) setCurrentNode(getNextNode());
+    if (dialogIndex === -1) {
+      const next = getNextNode();
+      if (next) setDialogIndex(dialogNodes.indexOf(next));
+    }
     setDialogOpen(true);
   };
 
   const advanceDialog = () => {
-    if (!currentNode) return;
+    const node = dialogNodes[dialogIndex];
+    if (!node) return;
 
-    if (currentNode.onSelectFlag) updateFlags(currentNode.onSelectFlag);
+    if (node.onSelectFlag) addFlag(node.onSelectFlag);
 
-    const nextNode = getNextNode();
-    setCurrentNode(nextNode);
-
-    if (!nextNode) setDialogOpen(false);
+    const next = getNextNode();
+    if (next) setDialogIndex(dialogNodes.indexOf(next));
+    else setDialogOpen(false);
   };
+
+  const currentNode = dialogIndex >= 0 ? dialogNodes[dialogIndex] : null;
 
   return (
     <>
-      <div
-        className="dog-npc"
-        style={{
-          position: "absolute", // <-- ensure it’s clickable
-          left: position.left,
-          top: position.top,
-          fontSize: 48,
-          cursor: "pointer",
-          userSelect: "none",
-          zIndex: 10,
-        }}
-        onClick={handleClick}
-      >
+      <div onClick={handleClick} style={{ cursor: "pointer", fontSize: 48 }}>
         🐕
       </div>
 

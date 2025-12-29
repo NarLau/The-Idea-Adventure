@@ -5,6 +5,8 @@ export default [
   route('api/auth/*', 'routes/auth.ts'),
   route('/project-info', 'routes/projectInformation.tsx'),
   route('/navplaygame', 'routes/navplaygame.tsx'),
-  layout('./routes/shell.tsx',[route('/game', 'routes/game/index.tsx')]),
-  
+  layout('./routes/shell.tsx', [
+		route('/game', 'routes/game/index.tsx'),
+		route('/game/user/updateFlags', 'routes/game/user/updateFlags.tsx'), 
+	]),
 ] satisfies RouteConfig;
