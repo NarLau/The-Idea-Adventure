@@ -58,6 +58,10 @@ const dogDialogNodes = await db
     dog: {
       data: { /* optional interactable info */ },
       dialogNodes: await db.select().from(dialogNode).where(eq(dialogNode.characterId, 1)) // example dog character ID
+    }, 
+    cat: {
+      data: { /* optional interactable info */ },
+      dialogNodes: await db.select().from(dialogNode).where(eq(dialogNode.characterId, 2)) // example dog character ID
     },
     },
   };
