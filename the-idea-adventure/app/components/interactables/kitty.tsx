@@ -8,23 +8,15 @@ type CatProps = {
 };
 
 export default function Cat({ dialogNodes }: CatProps) {
-  const { flags, addFlag, inventory, setInventory } = useGame();
+  const { flags, addFlag, inventory, consumeItem } = useGame();
   const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
-
 
   const getNextNode = () =>
     dialogNodes.find((_, idx) =>
       idx > dialogIndex &&
-      evaluateDialogCondition(dialogNodes[idx], flags, inventory, (itemId) => {
-       
-        setInventory((prev) =>
-          prev
-            .map((i) =>
-              i.item.id === itemId ? { ...i, quantity: i.quantity - 1 } : i
-            )
-            .filter((i) => i.quantity > 0)
-        );
+      evaluateDialogCondition(dialogNodes[idx], flags, inventory, async (itemId) => {
+        await consumeItem(itemId); 
       })
     ) || null;
 

@@ -8,23 +8,15 @@ type DogProps = {
 };
 
 export default function Dog({ dialogNodes }: DogProps) {
-  const { flags, addFlag, inventory, setInventory } = useGame();
+  const { flags, addFlag, inventory, consumeItem } = useGame();
   const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
-
 
   const getNextNode = () =>
     dialogNodes.find((_, idx) =>
       idx > dialogIndex &&
-      evaluateDialogCondition(dialogNodes[idx], flags, inventory, (itemId) => {
-       
-        setInventory((prev) =>
-          prev
-            .map((i) =>
-              i.item.id === itemId ? { ...i, quantity: i.quantity - 1 } : i
-            )
-            .filter((i) => i.quantity > 0)
-        );
+      evaluateDialogCondition(dialogNodes[idx], flags, inventory, async (itemId) => {
+        await consumeItem(itemId); 
       })
     ) || null;
 
@@ -48,7 +40,6 @@ export default function Dog({ dialogNodes }: DogProps) {
   };
 
   const currentNode = dialogIndex >= 0 ? dialogNodes[dialogIndex] : null;
-
   return (
     <>
       <div onClick={handleClick} style={{ cursor: "pointer", fontSize: 48 }}>
