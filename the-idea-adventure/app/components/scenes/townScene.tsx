@@ -3,6 +3,7 @@ import type { UserSession } from "~/context/userSessionContext";
 import Dog from "../interactables/pup";
 import PlayerMoveScene from "./PlayerMoveScene";
 import { useState } from "react";
+import PickupItem from "../interactables/foundItems";
 
 export default function TownScene() {
   const { userSession } = useLoaderData<{ userSession: UserSession }>();
@@ -16,6 +17,8 @@ export default function TownScene() {
     <div className="playerTown sceneGlobal" style={{ position: "relative" }}>
       <h1>We are in the Town</h1>
      {dog && <Dog dialogNodes={dogDialogNodes} />}
+
+     <PickupItem itemId='"catToy"' itemName="Yarn" />
       <button className="door-toggle" onClick={() => setDoorToggled((p) => !p)}>door</button>
       <div className={`door-panel ${doorToggled ? "open" : ""}`}>
         <PlayerMoveScene targetScene="shop" label="Go to the Shop" type="door" />

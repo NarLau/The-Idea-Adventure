@@ -11,7 +11,7 @@ type GameContextType = {
   flags: string[];
   addFlag: (flag: string) => void;
   hasItem: (itemId: string) => boolean;
-  consumeItem: (itemId: string) => Promise<void>;
+  consumeItem: (itemId: string, pickup?: boolean) => Promise<void>;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -35,46 +35,37 @@ export function GameProvider({
   const hasItem = (itemId: string) =>
     inventory.some((i) => i.item.id === itemId && i.quantity > 0);
 
-  const consumeItem = async (itemId: string) => {
+  const consumeItem = async (itemId: string, pickup = false) => {
   const itemInInventory = inventory.find(i => i.item.id === itemId);
-  if (!itemInInventory || itemInInventory.quantity <= 0) return;
 
-  setInventory(prev =>
-    prev
-      .map(i =>
-        i.item.id === itemId
-          ? { ...i, quantity: i.quantity - 1 }
-          : i
-      )
-      .filter(i => i.quantity > 0) 
-  );
+  if (!itemInInventory && !pickup) return; 
+
+  setInventory(prev => {
+    if (itemInInventory) {
+      const newQty = pickup ? itemInInventory.quantity + 1 : itemInInventory.quantity - 1;
+      if (newQty <= 0) return prev.filter(i => i.item.id !== itemId);
+      return prev.map(i =>
+        i.item.id === itemId ? { ...i, quantity: newQty } : i
+      );
+    } else if (pickup) {
+      return [...prev, { item: { id: itemId, name: itemId }, quantity: 1 }];
+    }
+    return prev;
+  });
 
   try {
     const formData = new FormData();
     formData.append("itemId", itemId);
+    if (!pickup) formData.append("consume", "true");
 
     const response = await fetch("/game/user/updateFlags", {
       method: "POST",
       body: formData,
     });
 
-    if (!response.ok) {
-      setInventory(prev =>
-        prev.map(i =>
-          i.item.id === itemId
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
-        )
-      );
-    }
-  } catch {
-    setInventory(prev =>
-      prev.map(i =>
-        i.item.id === itemId
-          ? { ...i, quantity: i.quantity + 1 }
-          : i
-      )
-    );
+    if (!response.ok) console.error("Failed to update item on server");
+  } catch (err) {
+    console.error(err);
   }
 };
 

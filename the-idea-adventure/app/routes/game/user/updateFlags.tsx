@@ -12,9 +12,8 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const formData = await request.formData();
-
-  // --- Handle flag update ---
   const flag = formData.get("flag") as string | null;
+
   if (flag) {
     const [dbUser] = await db
       .select({ flags: user.flags })
@@ -42,7 +41,6 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  // --- Handle item consumption ---
   const itemId = formData.get("itemId") as string | null;
   if (itemId) {
     const [dbItem] = await db
@@ -55,34 +53,37 @@ export async function action({ request }: ActionFunctionArgs) {
         )
       );
 
-    if (!dbItem || dbItem.quantity <= 0) {
-      return new Response(
-        JSON.stringify({ success: false, message: "Item not found or quantity zero" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    if (dbItem.quantity === 1) {
-      // Delete the row if last item
-      await db
-        .delete(inventoryItem)
-        .where(
-          and(
-            eq(inventoryItem.userId, session.user.id),
-            eq(inventoryItem.itemId, itemId)
-          )
-        );
+    if (!dbItem) {
+      await db.insert(inventoryItem).values({
+        userId: session.user.id,
+        itemId,
+        quantity: 1
+      });
     } else {
-      // Otherwise decrement quantity
-      await db
-        .update(inventoryItem)
-        .set({ quantity: dbItem.quantity - 1 })
-        .where(
-          and(
-            eq(inventoryItem.userId, session.user.id),
-            eq(inventoryItem.itemId, itemId)
-          )
-        );
+      const newQuantity = (formData.get("consume") === "true")
+        ? dbItem.quantity - 1
+        : dbItem.quantity + 1;
+
+      if (newQuantity <= 0) {
+        await db
+          .delete(inventoryItem)
+          .where(
+            and(
+              eq(inventoryItem.userId, session.user.id),
+              eq(inventoryItem.itemId, itemId)
+            )
+          );
+      } else {
+        await db
+          .update(inventoryItem)
+          .set({ quantity: newQuantity })
+          .where(
+            and(
+              eq(inventoryItem.userId, session.user.id),
+              eq(inventoryItem.itemId, itemId)
+            )
+          );
+      }
     }
 
     return new Response(
@@ -91,7 +92,6 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  // --- If neither flag nor itemId was provided ---
   return new Response(
     JSON.stringify({ success: false, message: "No flag or itemId provided" }),
     { status: 400, headers: { "Content-Type": "application/json" } }
