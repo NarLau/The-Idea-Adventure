@@ -7,51 +7,88 @@ type BuyItemProps = {
 };
 
 export default function BuyItem({ itemId, itemName }: BuyItemProps) {
-  const { consumeItem, money, setMoney, hasItem } = useGame();
+  const { money, spendMoney, consumeItem, hasItem, flags } = useGame();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const price = 5;
+  const [hover, setHover] = useState(false);
 
-  // Check if item is already in inventory (bought)
-  const alreadyBought = hasItem(itemId);
+  const isDogTreat = itemId === '"dogTreat"';
+  const isCatTreat = itemId === '"catTreat"';
+  const cannotBuy =
+    (isDogTreat && (hasItem('"dogTreat"') || flags.includes("dogAte"))) ||
+    (isCatTreat && (hasItem('"catTreat"') || flags.includes("catAte")));
+
+  const tooltipMessage = isDogTreat
+    ? hasItem('"dogTreat"') || flags.includes("dogAte")
+      ? "You already fed your dog"
+      : ""
+    : isCatTreat
+    ? hasItem('"catTreat"') || flags.includes("catAte")
+      ? "You already fed your cat"
+      : ""
+    : "";
 
   const handleClick = () => {
-    if (alreadyBought) return; // do nothing if already bought
-    setError(null); // reset previous errors
-    setDialogOpen(true);
+    if (!cannotBuy) setDialogOpen(true);
   };
 
   const buyItem = async () => {
-    if (money < price) {
-      setError("You don't have enough money!");
-      return;
-    }
+    const cost = 5;
 
-    const fullItem: Item = { id: itemId, name: itemName };
-    await consumeItem(fullItem, true); // add item to inventory
-    setMoney(money - price); // deduct money
-    setDialogOpen(false);
+    if (money < cost) return alert("Not enough coins!");
+
+    try {
+      spendMoney(cost);
+      await consumeItem({ id: itemId, name: itemName }, true); 
+      setDialogOpen(false);
+    } catch (err) {
+      console.error("BuyItem error:", err);
+      alert("Purchase failed");
+    }
+  };
+
+  const iconStyle = {
+    cursor: cannotBuy ? "not-allowed" : "pointer",
+    fontSize: 48,
+    opacity: cannotBuy ? 0.4 : 1,
+    position: "relative" as const,
+  };
+
+  const tooltipStyle = {
+    position: "absolute" as const,
+    bottom: "100%",
+    left: "50%",
+    transform: "translateX(-50%)",
+    padding: "4px 8px",
+    backgroundColor: "#333",
+    color: "#fff",
+    borderRadius: "4px",
+    fontSize: "12px",
+    whiteSpace: "nowrap" as const,
+    pointerEvents: "none" as const,
+    opacity: hover ? 1 : 0,
+    transition: "opacity 0.2s ease",
+    zIndex: 10,
   };
 
   return (
-    <div>
+    <div style={{ display: "inline-block", position: "relative" }}>
       <div
         onClick={handleClick}
-        style={{
-          cursor: alreadyBought ? "not-allowed" : "pointer",
-          fontSize: 48,
-          opacity: alreadyBought ? 0.5 : 1, // visually show sold out
-        }}
+        style={iconStyle}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
       >
         🛒
+        {cannotBuy && tooltipMessage && <div style={tooltipStyle}>{tooltipMessage}</div>}
       </div>
 
       {dialogOpen && (
         <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
-          <div className="dialog-box" onClick={(e) => e.stopPropagation()}>
-            <p>Do you want to buy the {itemName} for 💰{price}?</p>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <button onClick={buyItem}>Yes</button>
+          <div className="dialog-box" onClick={e => e.stopPropagation()}>
+            <p>Do you want to buy the {itemName} for 5 coins?</p>
+            <button onClick={buyItem} disabled={cannotBuy}>
+              {cannotBuy ? "Cannot buy" : "Yes"}
+            </button>
             <button onClick={() => setDialogOpen(false)}>No</button>
           </div>
         </div>

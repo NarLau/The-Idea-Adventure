@@ -12,31 +12,37 @@ export default function Dog({ dialogNodes }: DogProps) {
   const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const getNextNode = () =>
-    dialogNodes.find((_, idx) =>
-      idx > dialogIndex &&
-      evaluateDialogCondition(dialogNodes[idx], flags, inventory, async (itemId) => {
-        await consumeItem(itemId); 
-      })
-    ) || null;
+  const getNextNode = async () => {
+    for (let idx = dialogIndex + 1; idx < dialogNodes.length; idx++) {
+      const node = dialogNodes[idx];
+      const valid = evaluateDialogCondition(node, flags, inventory, async (item) => {
+        await consumeItem(item); 
+      });
+      if (valid) return idx;
+    }
+    return null;
+  };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (dialogIndex === -1) {
-      const next = getNextNode();
-      if (next) setDialogIndex(dialogNodes.indexOf(next));
+      const nextIdx = await getNextNode();
+      if (nextIdx !== null) setDialogIndex(nextIdx);
     }
     setDialogOpen(true);
   };
 
-  const advanceDialog = () => {
+  const advanceDialog = async () => {
     const node = dialogNodes[dialogIndex];
     if (!node) return;
-
     if (node.onSelectFlag) addFlag(node.onSelectFlag);
 
-    const next = getNextNode();
-    if (next) setDialogIndex(dialogNodes.indexOf(next));
-    else setDialogOpen(false);
+    const nextIdx = await getNextNode();
+    if (nextIdx !== null) {
+      setDialogIndex(nextIdx);
+    } else {
+      setDialogOpen(false);
+      setDialogIndex(-1); 
+    }
   };
 
   const currentNode = dialogIndex >= 0 ? dialogNodes[dialogIndex] : null;
@@ -46,9 +52,9 @@ export default function Dog({ dialogNodes }: DogProps) {
         🐕
       </div>
 
-      {dialogOpen && currentNode && (
+       {dialogOpen && currentNode && (
         <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
-          <div className="dialog-box" onClick={(e) => e.stopPropagation()}>
+          <div className="dialog-box" onClick={e => e.stopPropagation()}>
             <p>{currentNode.text}</p>
             <button onClick={advanceDialog}>Next</button>
           </div>

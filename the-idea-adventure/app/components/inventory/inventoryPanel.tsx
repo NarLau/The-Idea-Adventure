@@ -5,8 +5,6 @@ export default function InventoryPanel() {
   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [showCoinPopup, setShowCoinPopup] = useState(false);
   const { inventory, money } = useGame();
-
-  // Track previous money to detect changes
   const [prevMoney, setPrevMoney] = useState(money);
 
   useEffect(() => {

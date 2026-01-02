@@ -8,106 +8,99 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user) {
-      return new Response(
-        JSON.stringify({ success: false, message: "Not logged in" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ success: false, message: "Not logged in" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
-
     const formData = await request.formData();
     const flag = formData.get("flag") as string | null;
-    const moneyFromClient = formData.get("money") as string | null;
+    const itemId = formData.get("itemId") as string | null;
+    const consume = formData.get("consume") === "true";
+    const [dbUser] = await db
+      .select({ flags: user.flags, money: user.money })
+      .from(user)
+      .where(eq(user.id, session.user.id));
 
-    if (flag) {
-      const [dbUser] = await db
-        .select({ flags: user.flags, money: user.money })
-        .from(user)
-        .where(eq(user.id, session.user.id));
+    const currentFlags = Array.isArray(dbUser?.flags) ? dbUser.flags : [];
+    let updatedFlags = [...currentFlags];
+    let newMoney = dbUser?.money ?? 0;
+    if (flag && !currentFlags.includes(flag)) {
+      updatedFlags.push(flag);
 
-      const currentFlags = Array.isArray(dbUser?.flags) ? dbUser.flags : [];
-      let updatedFlags = [...currentFlags];
-      let newMoney = dbUser?.money ?? 0;
-
-      if (!currentFlags.includes(flag)) {
-        updatedFlags.push(flag);
-
-        // Reward 5 money for quest flags
-        if (flag === "dogPlayed" || flag === "catPlayed") {
-          newMoney += 5;
-        }
-
-        if (moneyFromClient) {
-          newMoney = parseInt(moneyFromClient, 10);
-        }
-
-        await db
-          .update(user)
-          .set({ flags: updatedFlags, money: newMoney })
-          .where(eq(user.id, session.user.id));
-
-        return new Response(
-          JSON.stringify({ success: true, flags: updatedFlags, money: newMoney }),
-          { status: 200, headers: { "Content-Type": "application/json" } }
-        );
+      if (flag === "dogPlayed" || flag === "catPlayed") {
+        newMoney += 5;
       }
 
+      await db.update(user)
+        .set({ flags: updatedFlags, money: newMoney })
+        .where(eq(user.id, session.user.id));
+
       return new Response(
-        JSON.stringify({ success: false, message: "Flag exists", flags: currentFlags, money: newMoney }),
+        JSON.stringify({ success: true, flags: updatedFlags, money: newMoney }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    const itemId = formData.get("itemId") as string | null;
     if (itemId) {
+      const isTreat = itemId === '"dogTreat"' || itemId === '"catTreat"';
+      if (isTreat) {
+        if ((itemId === '"dogTreat"' && currentFlags.includes("dogAte")) ||
+            (itemId === '"catTreat"' && currentFlags.includes("catAte"))) {
+          return new Response(
+            JSON.stringify({ success: false, message: "Out of stock" }),
+            { status: 400, headers: { "Content-Type": "application/json" } }
+          );
+        }
+
+        const cost = 5;
+        if (newMoney < cost) {
+          return new Response(
+            JSON.stringify({ success: false, message: "Not enough money" }),
+            { status: 400, headers: { "Content-Type": "application/json" } }
+          );
+        }
+
+        newMoney -= cost;
+        await db.update(user).set({ money: newMoney }).where(eq(user.id, session.user.id));
+      }
       const [dbItem] = await db
         .select()
         .from(inventoryItem)
-        .where(
-          and(
-            eq(inventoryItem.userId, session.user.id),
-            eq(inventoryItem.itemId, itemId)
-          )
-        );
+        .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
 
-      if (!dbItem) {
-        await db.insert(inventoryItem).values({
-          userId: session.user.id,
-          itemId,
-          quantity: 1
-        });
-      } else {
-        const newQuantity = (formData.get("consume") === "true")
-          ? dbItem.quantity - 1
-          : dbItem.quantity + 1;
-
+      if (consume) {
+        if (!dbItem || dbItem.quantity <= 0) {
+          return new Response(
+            JSON.stringify({ success: false, message: "Item not in inventory" }),
+            { status: 400, headers: { "Content-Type": "application/json" } }
+          );
+        }
+        const newQuantity = dbItem.quantity - 1;
         if (newQuantity <= 0) {
-          await db
-            .delete(inventoryItem)
-            .where(
-              and(
-                eq(inventoryItem.userId, session.user.id),
-                eq(inventoryItem.itemId, itemId)
-              )
-            );
+          await db.delete(inventoryItem)
+            .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
         } else {
-          await db
-            .update(inventoryItem)
+          await db.update(inventoryItem)
             .set({ quantity: newQuantity })
-            .where(
-              and(
-                eq(inventoryItem.userId, session.user.id),
-                eq(inventoryItem.itemId, itemId)
-              )
-            );
+            .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
+        }
+      } else {
+        if (!dbItem) {
+          await db.insert(inventoryItem)
+            .values({ userId: session.user.id, itemId, quantity: 1 });
+        } else if (!isTreat) {
+          const newQuantity = dbItem.quantity + 1;
+          await db.update(inventoryItem)
+            .set({ quantity: newQuantity })
+            .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
         }
       }
-
       return new Response(
-        JSON.stringify({ success: true, itemId }),
+        JSON.stringify({ success: true, itemId, money: newMoney }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );
     }
-
     return new Response(
       JSON.stringify({ success: false, message: "No flag or itemId provided" }),
       { status: 400, headers: { "Content-Type": "application/json" } }
