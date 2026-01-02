@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGame } from "~/routes/game/gameContent";
+import { useGame, type Item } from "~/routes/game/gameContent";
 
 type PickupItemProps = {
   itemId: string;
@@ -13,7 +13,8 @@ export default function PickupItem({ itemId, itemName }: PickupItemProps) {
   const handleClick = () => setDialogOpen(true);
 
   const pickUpItem = async () => {
-    await consumeItem(itemId, true);
+    const fullItem: Item = { id: itemId, name: itemName };
+    await consumeItem(fullItem, true); 
     setDialogOpen(false);
   };
 

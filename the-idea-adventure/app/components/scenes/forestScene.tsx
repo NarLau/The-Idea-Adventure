@@ -3,6 +3,7 @@ import PlayerMoveScene from "./PlayerMoveScene";
 import type { UserSession } from "~/context/userSessionContext";
 import { useLoaderData } from "react-router-dom";
 import Cat from "../interactables/kitty";
+import PickupItem from "../interactables/foundItems";
 
 
 export default function ForestScene() {
@@ -16,6 +17,7 @@ export default function ForestScene() {
 
       <h1>We are in the Forest</h1>
       {cat && <Cat dialogNodes={catDialogNodes} />}
+      <PickupItem itemId='"dogToy"' itemName="Ball" />
       <button
         className="sign-toggle"
         onClick={() => setSignToggled((prev) => !prev)}>
