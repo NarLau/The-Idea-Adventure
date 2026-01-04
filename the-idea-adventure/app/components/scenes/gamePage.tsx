@@ -5,12 +5,13 @@ import ShopScene from "./shopScene";
 import TownScene from "./townScene";
 import InventoryPanel from "../inventory/inventoryPanel";
 import { useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { authClient } from "~/servers/auth/client";
 
 export default function GamePage() {
   const { scene } = useGame();
     const [settingsOpen, setSettingsOpen] = useState(false);
-    
+    const navigate = useNavigate();
     
 
   return (
@@ -43,9 +44,18 @@ export default function GamePage() {
     style={{ position: "absolute", bottom: "80px", right: "16px", zIndex: 1000 }}
   >
     <h3>Settings</h3>
-    <div className="buttonwrapper gameLogOut">
-      <NavLink to="/navplaygame">Sign Out</NavLink>
-    </div>
+    <div className="playgamewrapper">
+    <button className="profileBtn playOrLogin">
+      <NavLink to="/userprofile">My profile</NavLink>
+      </button>
+    <button className=" gameLogOut playOrLogin"
+      onClick={async () => {
+              await authClient.signOut();
+                navigate("/navplaygame");
+              
+            }}>Sign Out
+      </button>
+      </div>
   </div>
 </footer>
 

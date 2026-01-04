@@ -37,15 +37,13 @@ export default function AuthButton() {
   }
 
   return (
-    <p
-      className="logoutP hovernbigger"
+    <button  className="logoutP hovernbigger"
       onClick={() =>
         authClient.signOut({
           query: { redirectTo: "/" },
         })
-      }
-    >
+      }>
       LogOut
-    </p>
+    </button>
   );
 }

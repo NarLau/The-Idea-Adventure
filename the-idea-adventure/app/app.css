@@ -38,10 +38,10 @@ main{
 
 /* ----------------- CSS Variables ----------------- */
 :root {
-  --primary: #abc4ab;
-  --primary-dark: #a39171;
-  --secondary: #dcc9b6;
-  --accent: #727d71;
+  --primary: #56d6562a;
+  --primary-dark: #416174;
+  --secondary: #bb8d5e;
+  --accent: #56d6562a;
   --text:#1A1A1A;
   --text2: white;
   --bg: #FFFFFF;
@@ -101,12 +101,14 @@ color: var(--text2);
 .logoutP{
   cursor: pointer;
   font-size: small;
-  color: white
+  color: white;
+  background-color: #00000090;
 }
 .logoutP:hover {
   cursor: pointer;
   font-size: block;
-  color: white  
+  color: white ;
+    background-color: #000000b9;
 }
 .homepageArticle {
   margin: 2px 2px 4px 4px;
@@ -365,11 +367,12 @@ button {
 .playGame .playgamewrapper{
   width: 40%;
   height: 300px;
-    background-color: var(--secondary);
+    background-color: var(--primary-dark);
     display: flex;
     justify-content: space-around;
     flex-direction: column;
   align-items: center;  
+  color: white;
 }
 .playGame .playgamewrapper .playOrLogin{
   display: flex;
@@ -377,13 +380,29 @@ button {
   justify-content: center;
   align-items: center;
 }
-.playGame .playgamewrapper button{
+.playGame .playgamewrapper button, .playgamewrapper button{
     color: white;
     display: flex;
+    background-color: var(--primary);
+    box-shadow: 1px 1px 5px black;
     justify-self: center;
     margin: 2px;
     transition: transform 0.2s ease;
- }
+}
+.playgamewrapper button {
+background-color: var(--primary-dark);
+margin-bottom: 7px;
+}
+.playGame .playgamewrapper button:hover,.playgamewrapper button:hover  {
+  background-color: var(--primary);
+  color: black;
+}
+.delBtn {
+  background-color: rgb(119, 15, 15)!important;
+}
+.delBtn:hover {
+  background-color: rgb(244, 144, 144) !important;
+}
  .discordBtn:hover {
    background-color: rgb(92, 144, 185);
    color: black;
@@ -404,6 +423,88 @@ color: rgb(0, 128, 255);
 }
 .wrongusertext{
   font-size: smaller;
+}
+/* ===== Modal Overlay ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: var(--primary-dark);
+  color: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-title {
+  margin-bottom: 1rem;
+  color: white;
+  text-align: center;
+}
+
+.modal-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ===== Buttons ===== */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.modal-cancel {
+  flex: 1;
+  background-color: var(--primary);
+  color: white;
+}
+
+.modal-cancel:hover {
+  transform: scale(1.05);
+}
+
+.modal-delete {
+  flex: 1;
+  background-color: #b91c1c;
+  color: white;
+}
+
+.modal-delete:hover {
+  background-color: #dc2626;
+  transform: scale(1.05);
+}
+
+.modal-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Animation ===== */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 /* ----------------- GameInformation ----------------- */
 .projectInfoWrapper{  

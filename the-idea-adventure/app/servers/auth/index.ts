@@ -8,6 +8,9 @@ export const auth = betterAuth({
     provider: "pg",
   }),
   user: {
+    deleteUser: {
+			enabled: true
+		},
     additionalFields: {
       money: {
         type: "number",
@@ -39,6 +42,10 @@ export const auth = betterAuth({
     },  
   }, 
   session: {
-    expiresIn: 60 * 60
-  },
+	expiresIn: 60 * 60 * 24, // 24 hours instead of 1 hour
+	freshAge: 60 * 60 * 24, // Fresh for 24 hours
+	disableSessionRefresh: true
+},trustedOrigins: [
+		"http://localhost:5173",
+	],
 });

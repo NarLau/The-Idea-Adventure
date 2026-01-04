@@ -12,12 +12,11 @@ export default function Cat({ dialogNodes }: CatProps) {
   const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Get the next valid node
   const getNextNode = async () => {
     for (let idx = dialogIndex + 1; idx < dialogNodes.length; idx++) {
       const node = dialogNodes[idx];
       const valid = evaluateDialogCondition(node, flags, inventory, async (item) => {
-        await consumeItem(item); // Consume automatically if needed
+        await consumeItem(item);
       });
       if (valid) return idx;
     }

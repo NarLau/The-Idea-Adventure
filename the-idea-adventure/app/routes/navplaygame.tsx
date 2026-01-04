@@ -55,9 +55,9 @@ export default function PlayGameNavButton() {
       <NavLink to="/" className="goback hovernbigger"  end>
           I wanna go back!
         </NavLink>
+        <div className="buttonwrapper"><SignIn/></div>
     </div>
 
-       <div className="buttonwrapper"><SignIn/></div>
    </div>
   );
 }

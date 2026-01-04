@@ -44,6 +44,15 @@ const Nav: React.FC = () => {
             Info
           </NavLink>
         </li>
+         <li>
+          <NavLink
+            to="/userProfile"
+            className={getActiveClass}
+            onClick={() => setIsOpen(false)}
+          >
+            My account
+          </NavLink>
+        </li>
         <li>
           <NavLink
             to="/navplaygame"
