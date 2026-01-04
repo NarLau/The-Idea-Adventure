@@ -27,7 +27,12 @@ export default function AuthButton() {
         Login with Discord
       </button>
       <p className="orelse"> or</p>
-      <button  className="loginLogout btn-hero robloxBtn hovernbigger">Login with Roblox</button></>
+      <button  className="loginLogout btn-hero googleBtn hovernbigger"  onClick={() =>
+          authClient.signIn.social({
+            provider: "google",
+            callbackURL: location.pathname, 
+          })
+        }>Login with Google</button></>
     );
   }
 

@@ -89,7 +89,7 @@ color: var(--text2);
   background-color: rgb(26, 73, 109);
   color: white;
 }
-.robloxBtn {
+.googleBtn {
   background-color: #727d71;
   color: white;
 }
@@ -388,7 +388,7 @@ button {
    background-color: rgb(92, 144, 185);
    color: black;
  }
-.robloxBtn:hover {
+.googleBtn:hover {
   background-color:#889087;
   color: black;
 }
