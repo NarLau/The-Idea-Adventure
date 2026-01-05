@@ -6,7 +6,7 @@ export default function HomeScene() {
 
   return (
     <div className="playerHome sceneGlobal">
-      <h1>We are at Home</h1>
+      <p>Home</p>
 
       <button
         className="door-toggle"

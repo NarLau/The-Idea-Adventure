@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { DialogNode } from "~/context/userSessionContext";
 import { useGame } from "~/routes/game/gameContent";
 import { evaluateDialogCondition } from "~/utils/dialogHelper";
@@ -8,11 +8,26 @@ type CatProps = {
 };
 
 export default function Cat({ dialogNodes }: CatProps) {
- const { flags, addFlag, inventory, consumeItem } = useGame();
+  const { flags, addFlag, inventory, consumeItem } = useGame();
   const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const isSleepingTime = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    return hours >= 20 || hours < 5; 
+  };
+
+  useEffect(() => {
+    if (!isSleepingTime() && dialogIndex === -999) {
+      setDialogIndex(-1);
+      setDialogOpen(false);
+    }
+  }, [dialogIndex]);
+
   const getNextNode = async () => {
+    if (isSleepingTime()) return -999;
+
     for (let idx = dialogIndex + 1; idx < dialogNodes.length; idx++) {
       const node = dialogNodes[idx];
       const valid = evaluateDialogCondition(node, flags, inventory, async (item) => {
@@ -24,16 +39,21 @@ export default function Cat({ dialogNodes }: CatProps) {
   };
 
   const handleClick = async () => {
-    if (dialogIndex === -1) {
-      const nextIdx = await getNextNode();
-      if (nextIdx !== null) setDialogIndex(nextIdx);
-    }
+    const nextIdx = await getNextNode();
+    if (nextIdx !== null) setDialogIndex(nextIdx);
     setDialogOpen(true);
   };
 
   const advanceDialog = async () => {
+    if (dialogIndex === -999) {
+      setDialogOpen(false);
+      setDialogIndex(-1);
+      return;
+    }
+
     const node = dialogNodes[dialogIndex];
     if (!node) return;
+
     if (node.onSelectFlag) addFlag(node.onSelectFlag);
 
     const nextIdx = await getNextNode();
@@ -41,21 +61,26 @@ export default function Cat({ dialogNodes }: CatProps) {
       setDialogIndex(nextIdx);
     } else {
       setDialogOpen(false);
-      setDialogIndex(-1); 
+      setDialogIndex(-1);
     }
   };
 
-  const currentNode = dialogIndex >= 0 ? dialogNodes[dialogIndex] : null;
+  const currentNode =
+    dialogIndex === -999
+      ? { id: -999, text: "The animal is sleeping, and so should you. Come back tomorrow." }
+      : dialogIndex >= 0
+      ? dialogNodes[dialogIndex]
+      : null;
 
   return (
     <>
-      <div onClick={handleClick} style={{ cursor: "pointer", fontSize: 48 }}>
+      <div onClick={handleClick} className="npc">
         KTTY
       </div>
 
       {dialogOpen && currentNode && (
         <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
-          <div className="dialog-box" onClick={e => e.stopPropagation()}>
+          <div className="dialog-box" onClick={(e) => e.stopPropagation()}>
             <p>{currentNode.text}</p>
             <button onClick={advanceDialog}>Next</button>
           </div>

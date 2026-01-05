@@ -10,7 +10,7 @@ const Nav: React.FC = () => {
   return (
     <nav className="nav-container">
       <NavLink to="/">
-        <h2 className="logo">LOGO</h2>
+        <h3 className="logo">The Idea Adventure</h3>
       </NavLink>
 
       {/* Hamburger Icon */}

@@ -7,24 +7,21 @@ type BuyItemProps = {
 };
 
 export default function BuyItem({ itemId, itemName }: BuyItemProps) {
-  const { money, spendMoney, consumeItem, hasItem, flags } = useGame();
+  const { money, spendMoney, consumeItem, hasItem, flags, addFlag } = useGame();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [hover, setHover] = useState(false);
 
   const isDogTreat = itemId === '"dogTreat"';
   const isCatTreat = itemId === '"catTreat"';
+
   const cannotBuy =
     (isDogTreat && (hasItem('"dogTreat"') || flags.includes("dogAte"))) ||
     (isCatTreat && (hasItem('"catTreat"') || flags.includes("catAte")));
 
-  const tooltipMessage = isDogTreat
-    ? hasItem('"dogTreat"') || flags.includes("dogAte")
+  const tooltipMessage = cannotBuy
+    ? isDogTreat
       ? "You already fed your dog"
-      : ""
-    : isCatTreat
-    ? hasItem('"catTreat"') || flags.includes("catAte")
-      ? "You already fed your cat"
-      : ""
+      : "You already fed your cat"
     : "";
 
   const handleClick = () => {
@@ -33,12 +30,14 @@ export default function BuyItem({ itemId, itemName }: BuyItemProps) {
 
   const buyItem = async () => {
     const cost = 5;
-
     if (money < cost) return alert("Not enough coins!");
 
     try {
       spendMoney(cost);
-      await consumeItem({ id: itemId, name: itemName }, true); 
+      await consumeItem({ id: itemId, name: itemName }, true);
+      if (isDogTreat) addFlag("dogAte");
+      if (isCatTreat) addFlag("catAte");
+
       setDialogOpen(false);
     } catch (err) {
       console.error("BuyItem error:", err);
@@ -71,28 +70,30 @@ export default function BuyItem({ itemId, itemName }: BuyItemProps) {
   };
 
   return (
-    <div style={{ display: "inline-block", position: "relative" }}>
-      <div
-        onClick={handleClick}
-        style={iconStyle}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-      >
-        🛒
-        {cannotBuy && tooltipMessage && <div style={tooltipStyle}>{tooltipMessage}</div>}
-      </div>
-
-      {dialogOpen && (
-        <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
-          <div className="dialog-box" onClick={e => e.stopPropagation()}>
-            <p>Do you want to buy the {itemName} for 5 coins?</p>
-            <button onClick={buyItem} disabled={cannotBuy}>
-              {cannotBuy ? "Cannot buy" : "Yes"}
-            </button>
-            <button onClick={() => setDialogOpen(false)}>No</button>
-          </div>
+    <div className="shopItem">
+      <div style={{ display: "inline-block", position: "relative" }}>
+        <div
+          onClick={handleClick}
+          style={iconStyle}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          🛒
+          {cannotBuy && tooltipMessage && <div style={tooltipStyle}>{tooltipMessage}</div>}
         </div>
-      )}
+
+        {dialogOpen && (
+          <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
+            <div className="dialog-box" onClick={e => e.stopPropagation()}>
+              <p>Do you want to buy the {itemName} for 5 coins?</p>
+              <button onClick={buyItem} disabled={cannotBuy}>
+                {cannotBuy ? "Cannot buy" : "Yes"}
+              </button>
+              <button onClick={() => setDialogOpen(false)}>No</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ export default function ShopScene() {
 
   return (
     <div className="playerShop sceneGlobal">
-      <h1>Welcome to the Shop</h1>
+      <p>Shop</p>
 
       <BuyItem itemId='"dogTreat"' itemName="Dog Yums"  />
       <BuyItem itemId='"catTreat"' itemName="Cat Nams" />

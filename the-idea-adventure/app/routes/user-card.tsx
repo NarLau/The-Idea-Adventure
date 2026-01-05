@@ -10,3 +10,4 @@ await authClient.signOut({
     },
   },
 });
+

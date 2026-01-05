@@ -7,10 +7,20 @@ type PickupItemProps = {
 };
 
 export default function PickupItem({ itemId, itemName }: PickupItemProps) {
-  const { consumeItem } = useGame();
+  const { consumeItem, hasItem, flags } = useGame();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleClick = () => setDialogOpen(true);
+  const oneTimeFlags: Record<string, string> = {
+    '"dogToy"': "dogPlayed",
+    '"catToy"': "catPlayed",
+  };
+
+  const disabled =
+    hasItem(itemId) || (oneTimeFlags[itemId] && flags.includes(oneTimeFlags[itemId]));
+
+  const handleClick = () => {
+    if (!disabled) setDialogOpen(true);
+  };
 
   const pickUpItem = async () => {
     const fullItem: Item = { id: itemId, name: itemName };
@@ -19,11 +29,8 @@ export default function PickupItem({ itemId, itemName }: PickupItemProps) {
   };
 
   return (
-    <div>
-      <div
-        onClick={handleClick}
-        style={{ cursor: "pointer", fontSize: 48 }}
-      >
+    <div className="item" style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? "none" : "auto" }}>
+      <div onClick={handleClick}>
         🎁
       </div>
 

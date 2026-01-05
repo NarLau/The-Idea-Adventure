@@ -15,7 +15,7 @@ export default function ForestScene() {
     return (
     <div className="playerForest sceneGlobal">
 
-      <h1>We are in the Forest</h1>
+      <p>Forest</p>
       {cat && <Cat dialogNodes={catDialogNodes} />}
       <PickupItem itemId='"dogToy"' itemName="Ball" />
       <button

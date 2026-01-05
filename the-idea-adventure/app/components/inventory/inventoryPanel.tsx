@@ -18,7 +18,7 @@ export default function InventoryPanel() {
 
   return (
     <>
-      <div style={{ position: "relative", display: "inline-block" }}>
+      <div>
         <button
           className="inventory-toggle"
           onClick={() => setInventoryOpen(true)}

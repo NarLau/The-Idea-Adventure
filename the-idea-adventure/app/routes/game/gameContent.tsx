@@ -40,8 +40,8 @@ export function GameProvider({
   const hasItem = (itemId: string) =>
     inventory.some(i => i.item.id === itemId && i.quantity > 0);
   const consumeItem = async (item: Item | string, pickup = false) => {
-  const itemObj: Item = typeof item === "string" ? { id: item, name: item } : item;
-  const itemInInventory = inventory.find(i => i.item.id === itemObj.id);
+    const itemObj: Item = typeof item === "string" ? { id: item, name: item } : item;
+    const itemInInventory = inventory.find(i => i.item.id === itemObj.id);
 
   setInventory(prev => {
     if (itemInInventory) {

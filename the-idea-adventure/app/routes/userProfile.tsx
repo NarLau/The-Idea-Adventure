@@ -87,7 +87,7 @@ export default function UserProfile() {
       <div className="playGame">
         <div className="playgamewrapper">
         <div className="playOrLogin">
-          <p>You must signin to see your account</p>
+          <p className="marginHelper">You must signin to see your account</p>
           <div className="buttonwrapper"><SignIn /></div>
         </div>
       <NavLink to="/" className="goback hovernbigger" end>

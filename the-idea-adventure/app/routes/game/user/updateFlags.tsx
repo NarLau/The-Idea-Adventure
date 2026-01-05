@@ -43,64 +43,85 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     if (itemId) {
-      const isTreat = itemId === '"dogTreat"' || itemId === '"catTreat"';
-      if (isTreat) {
-        if ((itemId === '"dogTreat"' && currentFlags.includes("dogAte")) ||
-            (itemId === '"catTreat"' && currentFlags.includes("catAte"))) {
-          return new Response(
-            JSON.stringify({ success: false, message: "Out of stock" }),
-            { status: 400, headers: { "Content-Type": "application/json" } }
-          );
-        }
+  const isTreat = itemId === '"dogTreat"' || itemId === '"catTreat"';
+  const oneTimeItems: Record<string, string> = {
+    '"dogToy"': "dogPlayed",
+    '"catToy"': "catPlayed",
+  };
 
-        const cost = 5;
-        if (newMoney < cost) {
-          return new Response(
-            JSON.stringify({ success: false, message: "Not enough money" }),
-            { status: 400, headers: { "Content-Type": "application/json" } }
-          );
-        }
-
-        newMoney -= cost;
-        await db.update(user).set({ money: newMoney }).where(eq(user.id, session.user.id));
-      }
-      const [dbItem] = await db
-        .select()
-        .from(inventoryItem)
-        .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
-
-      if (consume) {
-        if (!dbItem || dbItem.quantity <= 0) {
-          return new Response(
-            JSON.stringify({ success: false, message: "Item not in inventory" }),
-            { status: 400, headers: { "Content-Type": "application/json" } }
-          );
-        }
-        const newQuantity = dbItem.quantity - 1;
-        if (newQuantity <= 0) {
-          await db.delete(inventoryItem)
-            .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
-        } else {
-          await db.update(inventoryItem)
-            .set({ quantity: newQuantity })
-            .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
-        }
-      } else {
-        if (!dbItem) {
-          await db.insert(inventoryItem)
-            .values({ userId: session.user.id, itemId, quantity: 1 });
-        } else if (!isTreat) {
-          const newQuantity = dbItem.quantity + 1;
-          await db.update(inventoryItem)
-            .set({ quantity: newQuantity })
-            .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
-        }
-      }
+  if (oneTimeItems[itemId]) {
+    const requiredFlag = oneTimeItems[itemId];
+    if (currentFlags.includes(requiredFlag)) {
       return new Response(
-        JSON.stringify({ success: true, itemId, money: newMoney }),
-        { status: 200, headers: { "Content-Type": "application/json" } }
+        JSON.stringify({ success: false, message: "Item already picked up" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
+  }
+
+  if (isTreat) {
+    if ((itemId === '"dogTreat"' && currentFlags.includes("dogAte")) ||
+        (itemId === '"catTreat"' && currentFlags.includes("catAte"))) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Out of stock" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const cost = 5;
+    if (newMoney < cost) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Not enough money" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    newMoney -= cost;
+    await db.update(user)
+      .set({ money: newMoney })
+      .where(eq(user.id, session.user.id));
+  }
+
+  const [dbItem] = await db
+    .select()
+    .from(inventoryItem)
+    .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
+
+  if (consume) {
+    if (!dbItem || dbItem.quantity <= 0) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Item not in inventory" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const newQuantity = dbItem.quantity - 1;
+    if (newQuantity <= 0) {
+      await db.delete(inventoryItem)
+        .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
+    } else {
+      await db.update(inventoryItem)
+        .set({ quantity: newQuantity })
+        .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
+    }
+  } else {
+    if (!dbItem) {
+      await db.insert(inventoryItem)
+        .values({ userId: session.user.id, itemId, quantity: 1 });
+    } else if (!isTreat) {
+      const newQuantity = dbItem.quantity + 1;
+      await db.update(inventoryItem)
+        .set({ quantity: newQuantity })
+        .where(and(eq(inventoryItem.userId, session.user.id), eq(inventoryItem.itemId, itemId)));
+    }
+  }
+
+  return new Response(
+    JSON.stringify({ success: true, itemId, money: newMoney }),
+    { status: 200, headers: { "Content-Type": "application/json" } }
+  );
+}
+
     return new Response(
       JSON.stringify({ success: false, message: "No flag or itemId provided" }),
       { status: 400, headers: { "Content-Type": "application/json" } }

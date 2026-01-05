@@ -6,8 +6,7 @@ export default function Footer() {
         <p>© 2025 The Idea Adventure</p>
 
         <nav className="footer-nav">
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
+          <Link to="/project-info">About</Link>
           <Link to="/privacy">Privacy</Link>
         </nav>
       </div>
