@@ -31,33 +31,51 @@ export default function GamePage() {
       {/* Bottom HUD: inventory, settings */}
       <footer className="bottom-hud">
   <InventoryPanel />
+
   <button
     className="settings-button"
-    onClick={() => setSettingsOpen((prev) => !prev)}
+    onClick={() => setSettingsOpen(true)}
   >
     ⚙️
   </button>
 
-  {/* Settings panel */}
-  <div
-    className={`settings-panel ${settingsOpen ? "open" : ""}`}
-    style={{ position: "absolute", bottom: "80px", right: "16px", zIndex: 1000 }}
-  >
-    <h3>Settings</h3>
-    <div className="playgamewrapper">
-    <button className="profileBtn playOrLogin">
-      <NavLink to="/userprofile">My profile</NavLink>
-      </button>
-    <button className=" gameLogOut playOrLogin"
-      onClick={async () => {
+  {settingsOpen && (
+    <div
+      className="dialog-overlay"
+      onClick={() => setSettingsOpen(false)}
+    >
+      <div
+        className="settings-panel open"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: "absolute",
+          bottom: "80px",
+          right: "16px",
+          zIndex: 1000,
+        }}
+      >
+        <h3>Settings</h3>
+
+        <div className="playgamewrapper">
+          <button className="profileBtn playOrLogin">
+            <NavLink to="/userprofile">My profile</NavLink>
+          </button>
+
+          <button
+            className="gameLogOut playOrLogin"
+            onClick={async () => {
               await authClient.signOut();
-                navigate("/navplaygame");
-              
-            }}>Sign Out
-      </button>
+              navigate("/navplaygame");
+            }}
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
-  </div>
+    </div>
+  )}
 </footer>
+
 
     </div>
   );

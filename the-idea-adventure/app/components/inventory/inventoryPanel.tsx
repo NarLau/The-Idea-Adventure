@@ -21,31 +21,41 @@ export default function InventoryPanel() {
       <div style={{ position: "relative", display: "inline-block" }}>
         <button
           className="inventory-toggle"
-          onClick={() => setInventoryOpen(prev => !prev)}
+          onClick={() => setInventoryOpen(true)}
         >
           🎒
         </button>
 
-        {showCoinPopup && (
-          <span className="coin-popup">+5</span>
-        )}
+        {showCoinPopup && <span className="coin-popup">+5</span>}
       </div>
 
-      <div className={`inventory-panel ${inventoryOpen ? "open" : ""}`}>
-        <h3>Inventory</h3>
-        {inventory.length === 0 ? (
-          <p className="empty">Your inventory is empty.</p>
-        ) : (
-          <ul>
-            {inventory.map(({ item, quantity }) => (
-              <li key={item.id}>
-                {item.name} x{quantity}
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="money">💰 {money}</div>
-      </div>
+      {inventoryOpen && (
+        <div
+          className="dialog-overlay"
+          onClick={() => setInventoryOpen(false)}
+        >
+          <div
+            className="inventory-panel open"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>Inventory</h3>
+
+            {inventory.length === 0 ? (
+              <p className="empty">Your inventory is empty.</p>
+            ) : (
+              <ul>
+                {inventory.map(({ item, quantity }) => (
+                  <li key={item.id}>
+                    {item.name} x{quantity}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="money">💰 {money}</div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

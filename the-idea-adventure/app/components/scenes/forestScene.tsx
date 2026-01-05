@@ -20,13 +20,21 @@ export default function ForestScene() {
       <PickupItem itemId='"dogToy"' itemName="Ball" />
       <button
         className="sign-toggle"
-        onClick={() => setSignToggled((prev) => !prev)}>
+        onClick={() => setSignToggled(true)}>
         Sign
       </button>
-      <div className={`sign-panel ${signToggled ? "open" : ""}`}>
-        <PlayerMoveScene targetScene="home" label="Go home" type="sign" />
+            
+      {signToggled && (
+        <div
+          className="dialog-overlay"
+          onClick={() => setSignToggled(false)}>
+          <div className="sign-panel open"
+          onClick={(e) => e.stopPropagation()}> 
         <PlayerMoveScene targetScene="town" label="Go to Town" type="sign" />
+        <PlayerMoveScene targetScene="home" label="Go Home" type="sign" />
+        </div>
       </div>
+      )}
     </div>
   )
 }

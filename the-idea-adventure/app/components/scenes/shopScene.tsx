@@ -13,16 +13,20 @@ export default function ShopScene() {
       <BuyItem itemId='"dogTreat"' itemName="Dog Yums"  />
       <BuyItem itemId='"catTreat"' itemName="Cat Nams" />
 
-      <button
-        className="door-toggle"
-        onClick={() => setDoorToggled((prev) => !prev)}
-      >
+      <button className="door-toggle"
+      onClick={() => setDoorToggled(true)}>
         door
       </button>
-      <div className={`door-panel ${doorToggled ? "open" : ""}`}>
-        
-        <PlayerMoveScene targetScene="town" label="Go to Town" type="door" />
-      </div>
+
+      {doorToggled && (
+        <div className="dialog-overlay"
+        onClick={() => setDoorToggled(false)}>
+          <div className="door-panel open"
+          onClick={(e) => e.stopPropagation()}>
+            <PlayerMoveScene targetScene="town" label="Go to Town" type="door" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,15 +19,43 @@ export default function TownScene() {
      {dog && <Dog dialogNodes={dogDialogNodes} />}
 
      <PickupItem itemId='"catToy"' itemName="Yarn" />
-      <button className="door-toggle" onClick={() => setDoorToggled((p) => !p)}>door</button>
-      <div className={`door-panel ${doorToggled ? "open" : ""}`}>
-        <PlayerMoveScene targetScene="shop" label="Go to the Shop" type="door" />
-      </div>
-      <button className="sign-toggle" onClick={() => setSignToggled((p) => !p)}>Sign</button>
-      <div className={`sign-panel ${signToggled ? "open" : ""}`}>
-        <PlayerMoveScene targetScene="forest" label="Go to Forest" type="sign" />
-        <PlayerMoveScene targetScene="home" label="Go Home" type="sign" />
-      </div>
+      <button
+              className="door-toggle"
+              onClick={() => setDoorToggled(true)}>
+              door
+            </button>
+      
+            {doorToggled && (
+              <div
+                className="dialog-overlay"
+                onClick={() => setDoorToggled(false)}>
+                <div
+                  className="door-panel open"
+                  onClick={(e) => e.stopPropagation()}>
+              
+              <PlayerMoveScene targetScene="shop" label="Go to Shop" type="door" />
+              </div>
+            </div>
+            )}
+      <button
+              className="sign-toggle"
+              onClick={() => setSignToggled(true)}>
+              Sign
+            </button>
+      
+            {signToggled && (
+              <div
+                className="dialog-overlay"
+                onClick={() => setSignToggled(false)}>
+                <div
+                  className="sign-panel open"
+                  onClick={(e) => e.stopPropagation()}>
+              
+              <PlayerMoveScene targetScene="forest" label="Go to the Forest" type="sign" />
+              <PlayerMoveScene targetScene="home" label="Go Home" type="sign" />
+              </div>
+            </div>
+            )}
     </div>
   );
 }
