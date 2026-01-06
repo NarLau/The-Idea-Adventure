@@ -2,14 +2,19 @@ import "dotenv/config";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../database";
 import { betterAuth } from "better-auth";
+import { inventoryItem } from "../database/schema";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
   user: {
-    deleteUser: {
-			enabled: true
+   deleteUser: {
+			enabled: true,
+			beforeDelete: async (user) => {
+				await db.delete(inventoryItem).where(eq(inventoryItem.userId, user.id));
+			},
 		},
     additionalFields: {
       money: {
