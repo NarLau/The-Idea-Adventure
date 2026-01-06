@@ -74,8 +74,8 @@ export default function Dog({ dialogNodes }: DogProps) {
 
   return (
     <>
-      <div onClick={handleClick} className="npc">
-        🐕
+      <div onClick={handleClick} className="npc dog">
+        
       </div>
 
       {dialogOpen && currentNode && (

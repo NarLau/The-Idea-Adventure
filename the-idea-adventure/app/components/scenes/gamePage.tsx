@@ -17,7 +17,7 @@ export default function GamePage() {
   return (
     <div className="game-page-grid">
       <header className="top-bar">
-         <h3 className="logo">The Idea Adventure</h3>
+         <h3 className="logo gameLogo">The Idea Adventure</h3>
       </header>
       <main className="game-frame">
         {scene === "home" && <HomeScene />}

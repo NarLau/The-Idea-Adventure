@@ -74,7 +74,7 @@ export default function Cat({ dialogNodes }: CatProps) {
 
   return (
     <>
-      <div onClick={handleClick} className="npc">
+      <div onClick={handleClick} className="npc cat">
         KTTY
       </div>
 

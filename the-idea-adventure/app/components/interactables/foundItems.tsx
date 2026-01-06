@@ -5,7 +5,6 @@ type PickupItemProps = {
   itemId: string;
   itemName: string;
 };
-
 export default function PickupItem({ itemId, itemName }: PickupItemProps) {
   const { consumeItem, hasItem, flags } = useGame();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -28,11 +27,18 @@ export default function PickupItem({ itemId, itemName }: PickupItemProps) {
     setDialogOpen(false);
   };
 
+  const itemClass = itemName.replace(/\s+/g, "-").toLowerCase();
+
   return (
-    <div className="item" style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? "none" : "auto" }}>
-      <div onClick={handleClick}>
-        🎁
-      </div>
+    <>
+      <div
+        onClick={handleClick}        
+        className={`item ${itemClass}`} 
+        style={{
+          opacity: disabled ? 0.5 : 1,
+          pointerEvents: disabled ? "none" : "auto",
+        }}
+      />
 
       {dialogOpen && (
         <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
@@ -43,6 +49,6 @@ export default function PickupItem({ itemId, itemName }: PickupItemProps) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

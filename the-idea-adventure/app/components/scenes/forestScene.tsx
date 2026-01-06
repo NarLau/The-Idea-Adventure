@@ -21,7 +21,7 @@ export default function ForestScene() {
       <button
         className="sign-toggle"
         onClick={() => setSignToggled(true)}>
-        Sign
+        
       </button>
             
       {signToggled && (

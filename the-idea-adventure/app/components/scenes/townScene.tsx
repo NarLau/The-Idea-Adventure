@@ -21,7 +21,7 @@ export default function TownScene() {
      <PickupItem itemId='"catToy"' itemName="Yarn" />
       <button className="door-toggle"
       onClick={() => setDoorToggled(true)}>
-        door
+        
       </button>
       
      {doorToggled && (
@@ -35,7 +35,7 @@ export default function TownScene() {
       )}
       <button className="sign-toggle"
       onClick={() => setSignToggled(true)}>
-        Sign
+        
       </button>
       {signToggled && (
         <div className="dialog-overlay"

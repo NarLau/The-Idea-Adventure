@@ -15,7 +15,7 @@ export default function ShopScene() {
 
       <button className="door-toggle"
       onClick={() => setDoorToggled(true)}>
-        door
+        
       </button>
 
       {doorToggled && (

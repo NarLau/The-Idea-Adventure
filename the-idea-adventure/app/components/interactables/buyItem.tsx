@@ -41,12 +41,7 @@ export default function BuyItem({ itemId, itemName }: BuyItemProps) {
     }
   };
 
-  const iconStyle = {
-    cursor: cannotBuy ? "not-allowed" : "pointer",
-    fontSize: 48,
-    opacity: cannotBuy ? 0.4 : 1,
-    position: "relative" as const,
-  };
+  const itemClass = itemName.replace(/\s+/g, "-").toLowerCase();
 
   const tooltipStyle = {
     position: "absolute" as const,
@@ -66,30 +61,39 @@ export default function BuyItem({ itemId, itemName }: BuyItemProps) {
   };
 
   return (
-    <div className="shopItem">
-      <div style={{ display: "inline-block", position: "relative" }}>
-        <div
-          onClick={handleClick}
-          style={iconStyle}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-        >
-          🛒
-          {cannotBuy && tooltipMessage && <div style={tooltipStyle}>{tooltipMessage}</div>}
-        </div>
-
-        {dialogOpen && (
-          <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
-            <div className="dialog-box" onClick={e => e.stopPropagation()}>
-              <p>Do you want to buy the {itemName} for 5 coins?</p>
-              <button onClick={buyItem} disabled={cannotBuy}>
-                {cannotBuy ? "Cannot buy" : "Yes"}
-              </button>
-              <button onClick={() => setDialogOpen(false)}>No</button>
-            </div>
-          </div>
-        )}
+    <>
+      <div
+        className={`shopItem ${itemClass}`} 
+        onClick={handleClick} 
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        style={{
+          width: "100%", 
+          height: "100%",
+          cursor: cannotBuy ? "not-allowed" : "pointer",
+          opacity: cannotBuy ? 0.4 : 1,
+          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {cannotBuy && tooltipMessage && <div style={tooltipStyle}>{tooltipMessage}</div>}
       </div>
-    </div>
+
+      {dialogOpen && (
+        <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>
+          <div className="dialog-box" onClick={e => e.stopPropagation()}>
+            <p>Do you want to buy the {itemName} for 5 coins?</p>
+            <button onClick={buyItem} disabled={cannotBuy}>
+              {cannotBuy ? "Cannot buy" : "Yes"}
+            </button>
+            <button onClick={() => setDialogOpen(false)}>No</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

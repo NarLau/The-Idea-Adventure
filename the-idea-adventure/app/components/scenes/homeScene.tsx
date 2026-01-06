@@ -11,7 +11,7 @@ export default function HomeScene() {
       <button
         className="door-toggle"
         onClick={() => setDoorToggled(true)}>
-        door
+        
       </button>
 
       {doorToggled && (
