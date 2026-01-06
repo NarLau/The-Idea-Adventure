@@ -6,6 +6,8 @@ export default [
   route('/project-info', 'routes/projectInformation.tsx'),
   route('/navplaygame', 'routes/navplaygame.tsx'),
   route('/userprofile', 'routes/userProfile.tsx'),
+  route('/pp', 'routes/pp.tsx'),
+  route('/tos', 'routes/tos.tsx'),
   layout('./routes/shell.tsx', [
 		route('/game', 'routes/game/index.tsx'),
 		route('/game/user/updateFlags', 'routes/game/user/updateFlags.tsx'), 

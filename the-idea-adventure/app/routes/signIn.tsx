@@ -1,7 +1,9 @@
+import { useNavigate, NavLink } from "react-router-dom";
 import { authClient } from "~/servers/auth/client";
 
 
 export default function AuthButton() {
+      const navigate = useNavigate();
   const {
     data: session,
     isPending,
@@ -32,7 +34,8 @@ export default function AuthButton() {
             provider: "google",
             callbackURL: location.pathname, 
           })
-        }>Login with Google</button></>
+        }>Login with Google</button>
+        <p className="termsOfPolicy">by signing in you accept our <NavLink to="/tos"> terms of service </NavLink> and our <NavLink to="/pp"> privacy Policy </NavLink></p></>
     );
   }
 
