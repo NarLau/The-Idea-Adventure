@@ -7,7 +7,8 @@ export default function Footer() {
 
         <nav className="footer-nav">
           <Link to="/project-info">About</Link>
-          <Link to="/privacy">Privacy</Link>
+          <Link to="/pp">Privacy</Link>
+          <Link to="/tos">Terms of Service</Link>
         </nav>
       </div>
     </footer>

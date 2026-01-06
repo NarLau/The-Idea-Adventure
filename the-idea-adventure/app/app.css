@@ -371,7 +371,7 @@ button {
   
 .footer-nav a {
   font-weight: 600;
-  color: var(--primary-dark);
+  color: white;
   text-decoration: none;
   transition: color 0.2s;
 }
