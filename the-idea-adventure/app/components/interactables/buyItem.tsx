@@ -7,21 +7,20 @@ type BuyItemProps = {
 };
 
 export default function BuyItem({ itemId, itemName }: BuyItemProps) {
-  const { money, spendMoney, consumeItem, hasItem, flags, addFlag } = useGame();
+  const { money, spendMoney, consumeItem, flags } = useGame();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [hover, setHover] = useState(false);
 
-  const isDogTreat = itemId === '"dogTreat"';
-  const isCatTreat = itemId === '"catTreat"';
+  const oneTimeFlags: Record<string, string> = {
+    '"dogTreat"': "dogAte",
+    '"catTreat"': "catAte",
+  };
 
-  const cannotBuy =
-    (isDogTreat && (hasItem('"dogTreat"') || flags.includes("dogAte"))) ||
-    (isCatTreat && (hasItem('"catTreat"') || flags.includes("catAte")));
+  const requiredFlag = oneTimeFlags[itemId];
+  const cannotBuy = requiredFlag ? flags.includes(requiredFlag) : false;
 
-  const tooltipMessage = cannotBuy
-    ? isDogTreat
-      ? "You already fed your dog"
-      : "You already fed your cat"
+  const tooltipMessage = requiredFlag && cannotBuy
+    ? `You already used this ${itemName.toLowerCase()}`
     : "";
 
   const handleClick = () => {
@@ -34,10 +33,7 @@ export default function BuyItem({ itemId, itemName }: BuyItemProps) {
 
     try {
       spendMoney(cost);
-      await consumeItem({ id: itemId, name: itemName }, true);
-      if (isDogTreat) addFlag("dogAte");
-      if (isCatTreat) addFlag("catAte");
-
+      await consumeItem({ id: itemId, name: itemName }, true); 
       setDialogOpen(false);
     } catch (err) {
       console.error("BuyItem error:", err);
