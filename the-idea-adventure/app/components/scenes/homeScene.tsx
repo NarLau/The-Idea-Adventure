@@ -9,6 +9,7 @@ export default function HomeScene() {
       <p>Home</p>
 
       <button
+      title="door"
         className="door-toggle"
         onClick={() => setDoorToggled(true)}>
         

@@ -370,11 +370,12 @@ button {
 .cat {
   background-image: url("components/img/cat.png");
   background-repeat: no-repeat;
-  
+  color: transparent;
 }
 .dog{
   background-image: url("components/img/dog.png");
   background-repeat: no-repeat;
+  color: transparent;
 }
 .ball {
   background-image: url("components/img/ball.png");
@@ -406,12 +407,14 @@ button {
   background-image: url("components/img/sign.png");
     background-repeat: no-repeat;
     background-color: transparent;
+    color: transparent;
 }
 
 .door-toggle {
    background-image: url("components/img/door.png");
    background-repeat: no-repeat;
    background-color: transparent;
+   color: transparent;
 }
 .footer-nav {
   gap: 1.5rem;

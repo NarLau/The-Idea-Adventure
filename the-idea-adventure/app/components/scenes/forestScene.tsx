@@ -19,6 +19,7 @@ export default function ForestScene() {
       {cat && <Cat dialogNodes={catDialogNodes} />}
       <PickupItem itemId='"dogToy"' itemName="Ball" />
       <button
+      title="sign"
         className="sign-toggle"
         onClick={() => setSignToggled(true)}>
         

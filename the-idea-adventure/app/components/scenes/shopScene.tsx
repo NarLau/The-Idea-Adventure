@@ -14,6 +14,7 @@ export default function ShopScene() {
       <BuyItem itemId='"catTreat"' itemName="Cat Nams" />
 
       <button className="door-toggle"
+      title="door"
       onClick={() => setDoorToggled(true)}>
         
       </button>
