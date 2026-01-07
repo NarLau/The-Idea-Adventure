@@ -49,7 +49,7 @@ export default function App() {
   const spinnerRoutes = ["/", "/project-info"];
   const to = navigation.location?.pathname ?? "";
 
-  console.log("nav state:", navigation.state, "| to:", to);
+
 
   const shouldShowSpinner =
     navigation.state === "loading" &&
