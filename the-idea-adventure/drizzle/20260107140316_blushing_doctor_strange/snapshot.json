@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "075549c3-65de-4511-aa27-fbccef35fdf5",
+  "id": "5386f0fe-c152-432e-be0f-c3be577c2265",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -470,6 +470,19 @@
       "generated": null,
       "identity": null,
       "name": "isOneTimeUse",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "interactableObject"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "character_id",
       "entityType": "columns",
       "schema": "public",
       "table": "interactableObject"
@@ -1077,7 +1090,7 @@
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": "'{}'",
+      "default": "'[]'",
       "generated": null,
       "identity": null,
       "name": "flags",
@@ -1251,6 +1264,23 @@
     {
       "nameExplicit": false,
       "columns": [
+        "character_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "character",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "interactableObject_character_id_character_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "interactableObject"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
         "item_id"
       ],
       "schemaTo": "public",
@@ -1400,6 +1430,17 @@
       "entityType": "fks",
       "schema": "public",
       "table": "session"
+    },
+    {
+      "columns": [
+        "user_id",
+        "item_id"
+      ],
+      "nameExplicit": false,
+      "name": "inventory_item_pkey",
+      "entityType": "pks",
+      "schema": "public",
+      "table": "inventory_item"
     },
     {
       "columns": [
