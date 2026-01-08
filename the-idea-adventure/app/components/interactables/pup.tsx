@@ -12,10 +12,30 @@ export default function Dog({ dialogNodes }: DogProps) {
   const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+
+  const [serverHour, setServerHour] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function fetchTime() {
+      try {
+        const res = await fetch(
+          "https://worldtimeapi.org/api/timezone/Europe/Stockholm"
+        );
+        const data = await res.json();
+        const date = new Date(data.datetime);
+        setServerHour(date.getHours());
+      } catch {
+        setServerHour(new Date().getHours());
+      }
+    }
+
+    fetchTime();
+  }, []);
+
+
   const isSleepingTime = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    return hours >= 20 || hours < 5; 
+    if (serverHour === null) return false; 
+    return serverHour >= 20 || serverHour < 5;
   };
 
   useEffect(() => {
@@ -23,7 +43,7 @@ export default function Dog({ dialogNodes }: DogProps) {
       setDialogIndex(-1);
       setDialogOpen(false);
     }
-  }, [dialogIndex]);
+  }, [dialogIndex, serverHour]);
 
   const getNextNode = async () => {
     if (isSleepingTime()) return -999;
@@ -31,7 +51,7 @@ export default function Dog({ dialogNodes }: DogProps) {
     for (let idx = dialogIndex + 1; idx < dialogNodes.length; idx++) {
       const node = dialogNodes[idx];
       const valid = evaluateDialogCondition(node, flags, inventory, async (item) => {
-        await consumeItem(item); 
+        await consumeItem(item);
       });
       if (valid) return idx;
     }
@@ -39,6 +59,12 @@ export default function Dog({ dialogNodes }: DogProps) {
   };
 
   const handleClick = async () => {
+    if (isSleepingTime()) {
+      setDialogIndex(-999);
+      setDialogOpen(true);
+      return;
+    }
+
     const nextIdx = await getNextNode();
     if (nextIdx !== null) setDialogIndex(nextIdx);
     setDialogOpen(true);
@@ -67,16 +93,17 @@ export default function Dog({ dialogNodes }: DogProps) {
 
   const currentNode =
     dialogIndex === -999
-      ? { id: -999, text: "The dog is sleeping, and so should you. Come back tomorrow." }
+      ? {
+          id: -999,
+          text: "The dog is sleeping, and so should you. Come back tomorrow.",
+        }
       : dialogIndex >= 0
       ? dialogNodes[dialogIndex]
       : null;
 
   return (
     <>
-      <div onClick={handleClick} className="npc dog">
-        
-      </div>
+      <div onClick={handleClick} className="npc dog"></div>
 
       {dialogOpen && currentNode && (
         <div className="dialog-overlay" onClick={() => setDialogOpen(false)}>

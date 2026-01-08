@@ -36,7 +36,7 @@ export default function Cat({ dialogNodes }: CatProps) {
 
   const isSleepingTime = () => {
     if (serverHour === null) return false; 
-    return serverHour >= 10 || serverHour < 5;
+    return serverHour >= 20 || serverHour < 5;
   };
 
   useEffect(() => {
