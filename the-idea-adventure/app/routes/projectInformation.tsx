@@ -6,19 +6,18 @@ export default function ProjectInfo() {
             <Nav /> 
             <article className="projectInfoWrapper">
                 <section>
-                    <h2 className="title">To Whom It May Concern</h2>
-                    <h4>This is not just a small webgame, this is an open invitation to debate.</h4>
+                    <h2 className="title">To Whom It May Concern,</h2>
+                    <h4>This is not just a small web game; this is an open invitation to debate.</h4>
                     <p>
-                        This game has a restiriction. This Games characters goes to sleep at 19pm. why? becuse this small webbgame is targetet towards kids. Is it a bad idea to restrict a game from players? propobly. But i wish to start an open conversation on how we can better protect children and minors online. 
+                        This game has a restriction. The game’s characters go to sleep at 7 PM. Why? Because this small web game is targeted toward kids. Is it a bad idea to restrict a game from players? Probably. But I wish to start an open conversation on how we can better protect children and minors online. 
                     </p>
                 </section>
                 <section>
-                    <p>However a conversation needs to start somewere, so I will start. What if: Games made with minors in mind are not just online, with chatrooms and cloud storage. what if we bring back the good old cd, like the old retro pc games.
-                        What about what i did in this game, that may be targeted for the younger kids? Well i do belive restiricting a game if at the choice of the developer, and that it may not be a great idea but it did bring you here to read this and in the end, that was the point.
+                    <p>However, a conversation needs to start somewhere, so I will start. What if games made with minors in mind were not just online, with chat rooms and cloud storage? What if we brought back the good old CD, like the old retro PC games? What about what I did in this game, which may be targeted toward younger kids? Well, I do believe restricting a game is the choice of the developer, and while it may not be a great idea, it did bring you here to read this, and in the end, that was the point.
                     </p>
                 </section>
                   <section>
-                    <p>This webbgame was created as a part of my thesis on fullsatck webbdevelpoment, and is created using Better Auth, Drizzle orm Beta and React Router. Thank you for taking time of your day to be here!
+                    <p>This web game was created as part of my thesis on full-stack web development and was built using Better Auth, Drizzle ORM (Beta), and React Router. Thank you for taking the time out of your day to be here!
                     </p>
                 </section>
             

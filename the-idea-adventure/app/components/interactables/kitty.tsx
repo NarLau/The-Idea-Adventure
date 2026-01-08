@@ -12,10 +12,31 @@ export default function Cat({ dialogNodes }: CatProps) {
   const [dialogIndex, setDialogIndex] = useState<number>(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const [serverHour, setServerHour] = useState<number | null>(null);
+
+
+  useEffect(() => {
+    async function fetchTime() {
+      try {
+        const res = await fetch(
+          "https://worldtimeapi.org/api/timezone/Europe/Stockholm"
+        );
+        const data = await res.json();
+        const date = new Date(data.datetime);
+        setServerHour(date.getHours());
+      } catch {
+
+        setServerHour(new Date().getHours());
+      }
+    }
+
+    fetchTime();
+  }, []);
+
+
   const isSleepingTime = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    return hours >= 20 || hours < 5; 
+    if (serverHour === null) return false; 
+    return serverHour >= 10 || serverHour < 5;
   };
 
   useEffect(() => {
@@ -23,7 +44,7 @@ export default function Cat({ dialogNodes }: CatProps) {
       setDialogIndex(-1);
       setDialogOpen(false);
     }
-  }, [dialogIndex]);
+  }, [dialogIndex, serverHour]);
 
   const getNextNode = async () => {
     if (isSleepingTime()) return -999;
@@ -39,6 +60,12 @@ export default function Cat({ dialogNodes }: CatProps) {
   };
 
   const handleClick = async () => {
+    if (isSleepingTime()) {
+      setDialogIndex(-999);
+      setDialogOpen(true);
+      return;
+    }
+
     const nextIdx = await getNextNode();
     if (nextIdx !== null) setDialogIndex(nextIdx);
     setDialogOpen(true);
@@ -67,7 +94,10 @@ export default function Cat({ dialogNodes }: CatProps) {
 
   const currentNode =
     dialogIndex === -999
-      ? { id: -999, text: "The animal is sleeping, and so should you. Come back tomorrow." }
+      ? {
+          id: -999,
+          text: "The animal is sleeping, and so should you. Come back tomorrow.",
+        }
       : dialogIndex >= 0
       ? dialogNodes[dialogIndex]
       : null;
